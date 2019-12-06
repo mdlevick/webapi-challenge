@@ -11,7 +11,7 @@ router.get('/', (req, res) => {
     })
     .catch(err => {
         console.log(err);
-        res.status(500).json({ message: 'Error retrieving the actions' })
+        res.status(500).json(err, { message: 'Error retrieving the actions' })
     })
 });
 
@@ -29,7 +29,7 @@ router.put('/:actionId', validateActionId, validateAction, (req, res) => {
     })
     .catch(err => {
         console.log(err);
-        res.status(500).json({ message: 'Error retrieving the action'} )
+        res.status(500).json(err, { message: 'Error retrieving the action'} )
     })
 });
 
@@ -37,11 +37,11 @@ router.delete('/:actionId', validateActionId, (req, res) => {
     const { actionId } = req.params;
     Actions.remove(actionId)
     .then(action => {
-        res.status(200).json({ message: action, 'The action has been deleted.' })
+        res.status(200).json(action, { message:  'The action has been deleted.' })
     })
     .catch(err => {
         console.log(err);
-        res.status(500).json({ message: 'Error deleting the action' })
+        res.status(500).json(err, { message: 'Error deleting the action' })
     });
 });
 
@@ -59,7 +59,7 @@ function validateProjectId(req, res, next) {
     })
     .catch(err => {
         console.log(err);
-        res.status(500).json({ message: "failed to retrieve project by id" });
+        res.status(500).json(err, { message: "failed to retrieve project by id" });
     });
 };
 
@@ -91,7 +91,7 @@ function validateActionId(req, res, next) {
     })
     .catch(err => {
         console.log(err);
-        res.status(500).json({ message: "failed to retrieve action by id" });
+        res.status(500).json(err, { message: "failed to retrieve action by id" });
     });
 };
 

@@ -73,12 +73,12 @@ router.get('/:id/actions', validateProjectId, (req, res) => {
 });
 
 router.post('/:id/actions', validateProjectId, validateAction, (req, res) => {
-    let actionUpdate = req.body;
-    actionUpdate = {
-        ...actionUpdate,
+    let newAction = req.body;
+    newAction = {
+        ...newAction,
         project_id: req.project.id
     }
-    Actions.update(actionUpdate)
+    Actions.insert(newAction)
     .then(action => {
         res.status(201).json(action)
     })
@@ -130,20 +130,20 @@ function validateProject(req, res, next) {
 
 function validateActionId(req, res, next) {
    
-    const { id } = req.params;
+    const { actionId } = req.params;
 
-    Projects.get(id)
-    .then(project => {
-        if (project) {
-            req.project = project;
+    Actions.get(actionId)
+    .then(action => {
+        if (action) {
+            req.action = action;
             next();
         } else {
-            res.status(400).json({ message: "invalid project id" })
+            res.status(400).json({ message: "invalid action id" })
         }
     })
     .catch(err => {
         console.log(err);
-        res.status(500).json({ message: "failed to retrieve project by id" });
+        res.status(500).json({ message: "failed to retrieve action by id" });
     });
 };
 
