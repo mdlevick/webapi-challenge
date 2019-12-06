@@ -15,7 +15,7 @@ server.get('/', logger('logger for server.js'), (req, res) => {
   res.send(`<h2>Target acquired!</h2>`)
 });
 
-// server.use('/api/projects', logger('logger for projects'), projectRouter);
+
 server.use('/api/projects', projectRouter);
 
 
