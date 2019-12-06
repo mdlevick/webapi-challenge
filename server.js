@@ -3,6 +3,7 @@ const helmet = require('helmet')
 const logger = require('./api/logger.js');
 
 const projectRouter = require('./data/helpers/projectRouter.js');
+const actionRouter = require('./data/helpers/actionRouter.js');
 
 const server = express();
 
@@ -16,7 +17,9 @@ server.get('/', logger('logger for server.js'), (req, res) => {
 });
 
 
-server.use('/api/projects', projectRouter);
+server.use('/api/projects', logger('logger for projects'), projectRouter);
+
+server.use('/api/actions', logger('logger for actions'), actionRouter);
 
 
 
