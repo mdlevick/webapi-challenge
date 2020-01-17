@@ -1,5 +1,5 @@
 const express = require('express');
-const Actions = require('./actionModel.js');
+const Actions = require('./actionModel');
 
 const router = express.Router();
 
@@ -19,15 +19,15 @@ router.get('/', (req, res) => {
 // post new actions within the Project Router in order to include Project ID
 
 router.get('/:id', validateActionId, (req, res) => {
-    res.status(200).json(req.action.id);
+    res.status(200).json(req.action);
 });
 
 router.put('/:id', validateActionId, validateAction, (req, res) => {
     const actionUpdate = req.body;
 
     Actions.update(req.action.id, actionUpdate)
-    .then(action => {
-        res.status(200).json(action)
+    .then(actionU => {
+        res.status(200).json(actionU)
     })
     .catch(err => {
         console.log(err);
@@ -36,9 +36,10 @@ router.put('/:id', validateActionId, validateAction, (req, res) => {
 });
 
 router.delete('/:id', validateActionId, (req, res) => {
-    const { actionId } = req.params;
-    console.log(actionId, "req.params")
-    Actions.remove(actionId)
+    console.log(req.params, "req.params");
+    const id = req.params;
+    console.log(id, "AI");
+    Actions.remove(id)
     .then(action => {
         res.status(200).json({ message: 'The action has been deleted.' })
     })
@@ -49,54 +50,12 @@ router.delete('/:id', validateActionId, (req, res) => {
 
 //custom middleware
 
-// `validateProjectId` validates the project id on every request that expects a project id parameter
-// if the `id` parameter is valid, store that project object as `req.project`
-// if the `id` parameter does not match any project id in the database, cancel the request and respond with status `400` and `{ message: "invalid project id" }`
-
-function validateProjectId(req, res, next) {
-    // console.log(req.params);
-    const { id } = req.params;
-
-    Projects.get(id)
-    .then(project => {
-        if (project) {
-            req.project = project;
-            next();
-        } else {
-            res.status(400).json({ message: "invalid project id" })
-        }
-    })
-    .catch(err => {
-        console.log(err);
-        res.status(500).json({ message: "failed to retrieve project by id" });
-    });
-};
-
-
-// `validateProject` validates the `body` on a request to create a new project
-// if the request `body` is missing, cancel the request and respond with status `400` and `{ message: "missing project data" }`
-// if the request `body` is missing the required `name` field, cancel the request and respond with status `400` and `{ message: "missing required name field" }`
-// if the request `body` is missing the required `description` field, cancel the request and respond with status `400` and `{ message: "missing required description field" }`
-
-function validateProject(req, res, next) {
-    // console.log("validateProject", req.body);
-    if (!req.body) {
-      res.status(400).json({ message: "missing project data" });
-    } else if (!req.body.name) {
-      res.status(400).json({ message: "missing required name field" });
-    } else if (!req.body.description) {
-      res.status(400).json({ message: "missing required description field" });
-    } else {
-        next();
-    }
-}
-
 // `validateActionId` validates the action id on every request that expects a action id parameter
 // if the `id` parameter is valid, store that project object as `req.project`
 // if the `id` parameter does not match any project id in the database, cancel the request and respond with status `400` and `{ message: "invalid action id" }`
 
 function validateActionId(req, res, next) {
-    console.log(req.params);
+    console.log(req.params, "VAI id");
     const { id } = req.params;
 
     Actions.get(id)
